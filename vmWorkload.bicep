@@ -86,7 +86,7 @@ param vnetnameworkloadvnet string = 'test-fw-vn'   // declare the vnet to put th
 resource vnettodeploythenic 'Microsoft.Network/virtualNetworks@2022-07-01' existing = {
   name: vnetnameworkloadvnet
 }
-var subnetName = 'Workload-SN' // declare the subnet name
+var subnetName = 'WorkloadSubnet' // declare the subnet name
 ///////////////////////////
 
 
