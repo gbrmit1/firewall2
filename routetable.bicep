@@ -7,7 +7,7 @@ var routeTables = [
         properties:{
           addressPrefix: '0.0.0.0/0'
           nextHopType: 'VirtualAppliance'
-          nextHopIpAddress:'10.0.1.4'
+          nextHopIpAddress:wlrtNextHop
         }
       }
     ]
@@ -17,8 +17,8 @@ var routeTables = [
   }
 ]
 
-param location string = 'northeurope'
-
+param location string
+param wlrtNextHop string
 
 
 module routes './module/route-table.bicep' = {

@@ -1,0 +1,14 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "adminpassword": {
+            "reference": {
+                "keyVault": {
+                    "id": "/subscriptions/a7826b4d-0e55-4e8b-9b18-c53696348ed0/resourceGroups/rm-bicep-test/providers/Microsoft.KeyVault/vaults/robertmitchell212121"
+                },
+                "secretName": "wlPassword"
+            }
+        }
+    }
+}

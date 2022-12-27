@@ -1,7 +1,7 @@
 
 
 @sys.batchSize(1)
-module core_vnet_deployment './module/vnet_deployment.bicep' = {
+module vnet_deployments './module/vnet_deployment.bicep' = {
   name: 'test-fw-vn-deploy'
   params: {
     vnetname: 'test-fw-vn'

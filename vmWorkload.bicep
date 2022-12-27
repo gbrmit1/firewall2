@@ -1,35 +1,15 @@
 @description('Username for the Virtual Machine.')
 param adminUsername string = 'firestarter21'
 
-@description('Password for the Virtual Machine.')
-@minLength(12)
 @secure()
-param adminPassword string
+param adminpassword string
 
-@description('Unique DNS Name for the Public IP used to access the Virtual Machine.')
-param dnsLabelPrefix string = toLower('${vmName}-${uniqueString(resourceGroup().id, vmName)}')
-
-@description('Name for the Public IP used to access the Virtual Machine.')
-param publicIpName string = 'myPublicIPWorkloadVm'  // unique value
-
-@description('Allocation method for the Public IP used to access the Virtual Machine.')
-@allowed([
-  'Dynamic'
-  'Static'
-])
-param publicIPAllocationMethod string = 'Static'
-
-@description('SKU for the Public IP used to access the Virtual Machine.')
-@allowed([
-  'Basic'
-  'Standard'
-])
-param publicIpSku string = 'Basic'
 
 param OSVersion string = '2019-Datacenter-smalldisk'
 param vmSize string = 'Standard_D2s_v5'
 param location string = 'northeurope'          // check this is correct
 param vmName string = 'wl-vnet-vm' // unique value
+
 
 var storageAccountName = 'bootdiagswl${uniqueString(resourceGroup().id)}'  // unique value less than 24 chars
 var nicName = 'myVMNicWorkloadvm'
@@ -45,19 +25,7 @@ resource stg 'Microsoft.Storage/storageAccounts@2021-04-01' = {
   kind: 'Storage'
 }
 
-resource pip 'Microsoft.Network/publicIPAddresses@2021-02-01' = {
-  name: publicIpName
-  location: location
-  sku: {
-    name: publicIpSku
-  }
-  properties: {
-    publicIPAllocationMethod: publicIPAllocationMethod
-    dnsSettings: {
-      domainNameLabel: dnsLabelPrefix
-    }
-  }
-}
+
 
 resource securityGroup 'Microsoft.Network/networkSecurityGroups@2021-02-01' = {
   name: networkSecurityGroupName
@@ -98,10 +66,6 @@ resource nic 'Microsoft.Network/networkInterfaces@2021-02-01' = {
       {
         name: 'ipconfig2'
         properties: {
-          privateIPAllocationMethod: 'Dynamic'
-          publicIPAddress: {
-            id: pip.id
-          }
           subnet: {
             id: resourceId('Microsoft.Network/virtualNetworks/subnets', vnettodeploythenic.name, subnetName)
           }
@@ -110,6 +74,7 @@ resource nic 'Microsoft.Network/networkInterfaces@2021-02-01' = {
     ]
   }
 }
+output nicPrivateAddress string = nic.properties.ipConfigurations[0].properties.privateIPAddress
 
 resource vm 'Microsoft.Compute/virtualMachines@2021-03-01' = {
   name: vmName
@@ -121,7 +86,7 @@ resource vm 'Microsoft.Compute/virtualMachines@2021-03-01' = {
     osProfile: {
       computerName: vmName
       adminUsername: adminUsername
-      adminPassword: adminPassword
+      adminPassword: adminpassword
     }
     storageProfile: {
       imageReference: {
@@ -157,7 +122,11 @@ resource vm 'Microsoft.Compute/virtualMachines@2021-03-01' = {
         storageUri: stg.properties.primaryEndpoints.blob
       }
     }
+    priority:'Spot'
+    evictionPolicy:'Deallocate'
+    billingProfile:{
+      maxPrice:-1
+    }
   }
 }
 
-output hostname string = pip.properties.dnsSettings.fqdn

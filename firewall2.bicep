@@ -1,12 +1,12 @@
-param location string = 'northeurope'          // check this is correct
-param tagowner string = 'robert mitchell'
-param publiciptier string = 'standard'
-param publicIpAddressName string = 'fw-pip'
-param publicipallocationmethod string = 'static'
-param firewallpolicyname string = 'fw-policy'
-param firewallpolicysku string = 'standard'
-param ipconfigurationname string = 'testfwipconfigurations'
-param firewallname string = 'test-fw01'
+param location string
+param tagowner string
+param publiciptier string
+param publicIpAddressName string
+param publicipallocationmethod string
+param firewallpolicyname string
+param firewallpolicysku string
+param ipconfigurationname string
+param firewallname string
 
 
 //declarations for the firewall subnet used by the firewall resource
